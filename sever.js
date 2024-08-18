@@ -1,56 +1,32 @@
+// server.js
+const express = require('express');
+const connectDB = require('./config/db');
+const dotenv = require('dotenv');
+const authRoute =  require('./routes/userRoute')
+// const categoryRoute = require('./routes/categoryRoute');
+// const productRoute = require('./routes/productRoute')
+// Load config
+dotenv.config({ path: './.env' });
 
-// const express = require("express");
-// const bodyParser = require("body-parser");
-// const mongoose = require("mongoose");
-// const userRoutes = require("./routes/userRoutes");
-// const app = express();
-// port = 4000;
+// Connect to database
+connectDB();
 
-// mongoose.connect(
-//   "mongodb+srv://saqeeb3p:saqeeb3p@cluster0.4mfw9fs.mongodb.net/Ecommerce"
-// );
+const app = express();
 
-// mongoose.connection.once("open", () => {
-//   console.log("MongoDB Connected");
-// });
+// Init middleware
+app.use(express.json());
 
-// app.use(express.json());
-// app.use('/api',userRoutes)
+const cors = require('cors');
 
+// parse application/x-www-form-urlencoded
+app.use(cors())
 
-// app.listen(port, () => {
-//   console.log(`http://localhost:4000S`);
-// });
+// Define routes
+app.use('/api/auth',authRoute);
+// app.use('/api/categories', categoryRoute);
+// app.use('/api/products', productRoute);
 
+const PORT = process.env.PORT || 5000;
 
-const express=require('express');
-const mongoose=require('mongoose');
-const bodyParser=require('body-parser');
-const productRoutes=require('./routes/productRoute');
-const categoryRoutes = require('./routes/categoryRoutes');
-const userRoutes=require('./routes/userRoute');
-require('dotenv').config();
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-const app=express();
-const port=process.env.PORT || 3000;
-
-app.use(bodyParser.json());
-mongoose.connect(process.env.MONGO_URL);
-
-mongoose.connection.once('open',()=>{
-    console.log('connected to MongoDB database');
-});
-
-
-//userRoute
-app.use('/api/users',userRoutes);
-
-//CategoryRoute 
-app.use('/api/categories',categoryRoutes);
-
-// ProductsRoute
-app.use('/api/products',productRoutes);
-
-app.listen(port,()=>{
-    console.log(`http://localhost:${port}`);
-});
