@@ -20,7 +20,7 @@ async function registerUser  (req, res) {
         res.status(200).send({ message: 'User already exists.',success:false });
         }
     } catch (err) {
-        res.status(400).send({ error: err.message });
+        res.status(400).send({ error: err.message,success:false });
     }
 };
 
@@ -33,7 +33,7 @@ async function loginUser (req, res) {
         if (!user || !(await user.matchPassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials', success:false });
         }
-        const payload = { user: { id: user.id, role: user.role } };
+        const payload = { user: { id: user.id} };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log(token);
         res.status(202).send({ token:token, success:true });
@@ -42,7 +42,25 @@ async function loginUser (req, res) {
     }
 };
 
+async function userInformation(req, res) 
+{
+    const id = req.user.id;
+    try {
+        const user = await User.findById(id); // Corrected method
+        if(!user){
+            res.status(404).send({ message: 'User not found', success:false });
+        } else {
+            res.status(200).send({ user, message: 'User information retrieved successfully', success:true });
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({ error: 'Server error' });
+    }
+}
+
+
 module.exports = {
     registerUser,
     loginUser,
+    userInformation
 }
