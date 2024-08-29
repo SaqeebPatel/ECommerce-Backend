@@ -33,7 +33,7 @@ async function loginUser (req, res) {
         if (!user || !(await user.matchPassword(password))) {
             return res.status(401).json({ message: 'Invalid credentials', success:false });
         }
-        const payload = { user: { id: user.id} };
+        const payload = { user: { id: user.id ,role:user.role} };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log(token);
         res.status(202).send({ token:token, success:true });
