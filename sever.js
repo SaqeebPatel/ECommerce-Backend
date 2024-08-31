@@ -59,5 +59,6 @@ app.use('/api/categories', categoryRoute);
 app.use('/api/products', productRoute);
 
 const PORT = process.env.PORT || 5000;
+app.use('/uploads', express.static('uploads'));
 
 app.listen(PORT, () => console.log("http://localhost:5000/api/auth/"));
