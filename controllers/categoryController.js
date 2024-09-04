@@ -8,6 +8,7 @@ const categorymodel = require("../models/category");
 // Add Category
 async function addcategory(req, res) {
   console.log(req.body);
+  const userid = req.user.id;
   const { categoryname, createdBy } = req.body;
   try {
     const existingcategory = await categorymodel.findOne({ categoryname });
@@ -16,7 +17,7 @@ async function addcategory(req, res) {
     } else {
       const newcategory = new categorymodel({
         categoryname,
-        createdBy,
+        createdBy:req.user.id,
         createdAt: Date.now(),
       });
       await newcategory.save();
@@ -74,24 +75,44 @@ async function deletecategory(req, res) {
 
 // *************************************************
 // Update category
-async function updatecategory(req, res) {
-  console.log(req.body);
+// async function updatecategory(req, res) {
+//   console.log(req.body);
+//   const { categoryname, createdBy } = req.body;
+//   const { id } = req.params;
+
+//   try {
+//     const category = await categorymodel.findByIdAndUpdate(id);
+//     if (!category) {
+//       res.status(404).json({ message: "Category Not Found" });
+//     }
+//     category.categoryname = categoryname || category.categoryname;
+//     category.createdBy = createdBy || category.createdBy;
+//     await category.save();
+//     res.status(201).send({ message: "Category Updated Sucessfully" });
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// }
+   async function updatecategory (req, res)  {
   const { categoryname, createdBy } = req.body;
   const { id } = req.params;
 
   try {
-    const category = await categorymodel.findByIdAndUpdate(id);
+    const category = await categorymodel.findById(id);
     if (!category) {
-      res.status(404).json({ message: "Category Not Found" });
+      return res.status(404).json({ message: "Category Not Found" });
     }
+
     category.categoryname = categoryname || category.categoryname;
     category.createdBy = createdBy || category.createdBy;
     await category.save();
-    res.status(201).send({ message: "Category Updated Sucessfully" });
+
+    res.status(200).json({ message: "Category Updated Successfully" });
   } catch (error) {
+    console.error(error.message);
     res.status(500).send(error.message);
   }
-}
+};
 
 module.exports = {
   addcategory,
