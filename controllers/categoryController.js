@@ -31,7 +31,7 @@ async function addcategory(req, res) {
 // ******************************************
 // Get all category by id
 async function getcategorybyid(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   const { id } = req.params;
   try {
     const category = await categorymodel.findById(id);
@@ -58,41 +58,23 @@ async function getcategory(req, res) {
 }
 
 // ************************************************
-// Delete Category
 async function deletecategory(req, res) {
   console.log(req.body);
   const { id } = req.params;
+  console.log(req.params.category);
   try {
     const category = await categorymodel.findByIdAndDelete(id);
     if (!category) {
-      res.status(404).json({ message: "Category Not Found" });
+      return res.status(404).json({ message: "Category Not Found" });
     }
-    res.status(201).json({ message: "Category Deleted Sucessfully" });
+    res.status(200).json({ message: "Category Deleted Successfully" });
   } catch (error) {
     res.status(500).send(error.message);
   }
 }
 
 // *************************************************
-// Update category
-// async function updatecategory(req, res) {
-//   console.log(req.body);
-//   const { categoryname, createdBy } = req.body;
-//   const { id } = req.params;
 
-//   try {
-//     const category = await categorymodel.findByIdAndUpdate(id);
-//     if (!category) {
-//       res.status(404).json({ message: "Category Not Found" });
-//     }
-//     category.categoryname = categoryname || category.categoryname;
-//     category.createdBy = createdBy || category.createdBy;
-//     await category.save();
-//     res.status(201).send({ message: "Category Updated Sucessfully" });
-//   } catch (error) {
-//     res.status(500).send(error.message);
-//   }
-// }
    async function updatecategory (req, res)  {
   const { categoryname, createdBy } = req.body;
   const { id } = req.params;

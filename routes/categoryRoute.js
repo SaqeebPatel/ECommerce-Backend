@@ -21,8 +21,14 @@ router.put(
   authorise.admin,
   categorycontroller.updatecategory
 );
+// router.delete(
+//   "/deletecategory/:id",
+//   authorise.admin,
+//   categorycontroller.deletecategory
+// );
 router.delete(
   "/deletecategory/:id",
+  authorise.auth,  // Added auth middleware here
   authorise.admin,
   categorycontroller.deletecategory
 );
