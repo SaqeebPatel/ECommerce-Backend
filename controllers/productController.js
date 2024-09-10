@@ -33,9 +33,10 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
+  console.log(req.body);
   try {
     const products = await Product.find().populate("category"); // Assuming you want to populate category details
-
+    
     const modifiedProducts = products.map((product) => ({
       id: product._id,
       productname: product.productname,
@@ -51,6 +52,7 @@ exports.getAllProducts = async (req, res) => {
     }));
 
     res.status(200).send(modifiedProducts);
+    console.log(modifiedProducts);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
